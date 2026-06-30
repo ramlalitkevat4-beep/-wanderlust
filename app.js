@@ -45,6 +45,7 @@ app.get('/listings/new', (req, res) => {
 app.get('/listings/:id', async (req, res) => {
      let {id} = req.params;
      const listing1=await listing.findById(id);
+     console.log(await listing1.image);
 
       res.render('listings/show.ejs',{listing: listing1});
 });
@@ -61,7 +62,22 @@ app.get('/listings/:id/edit', async (req, res) => {
     const listing1=await listing.findById(id);
     res.render('listings/edit.ejs',{listing: listing1});
 });
+
+app.put('/listings/:id',async(req,res)=>{
+     let {id} = req.params;
+    await listing.findByIdAndUpdate( id,{ ...req.body.listing }, { new: true });
+    res.redirect('/listings');
+})
  
+
+app.delete('/listings/:id',async(req,res)=>{
+let {id}=req.params;
+
+await listing.findByIdAndDelete(id);
+res.redirect('/listings');
+});
+
+
  
 //         title: 'test listing',
 //         description: 'This is a test listing',

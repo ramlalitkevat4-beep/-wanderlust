@@ -107,3 +107,17 @@ align-items: space-evenly;
 border:none !important;
     background-color: #fe424d  !important;
 }
+
+.show-img{
+    height: 40vh;
+
+}
+
+.edit-delete{
+    display: flex;
+
+}
+
+.btn-update_listing{
+    background-color: rgb(220, 53, 69)
+}
