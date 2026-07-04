@@ -1,31 +1,48 @@
 <% layout('layout/boilerplate') %>
     <h1>Edit Listing</h1>
-    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST">
+    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" novalidate class="needs-validation">
        <div class="mb-3">
             <label for="title" class="form-label">Title:</label>
             <input type="text" id="title" class="form-control" name="listing[title]" value="<%= listing.title %>"
                 required><br><br>
+                <div class="invalid-feedback">
+                    Enter a Title
+                    
+                </div>
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Description:</label>
             <textarea id="description" class="form-control" name="listing[description]"
                 required><%= listing.description %></textarea><br><br>
+                <div class="invalid-feedback">
+                    Enter a Description
+                </div>
+
         </div>
 
         <div class="mb-3">
             <label for="price" class="form-label">Price:</label>
             <input type="number" class="form-control" id="price" name="listing[price]" value="<%= listing.price %>"
                 required>
+                <div class="invalid-feedback">
+                    Enter a price
+                </div>
         </div>
         <div class="mb-3">
             <label for="locations" class="form-label">Locations:</label>
             <input type="text" class="form-control" id="locations" name="listing[locations]"
-                value="<%= listing.locations %>" >
+                value="<%= listing.locations %>" required><br><br> >
+                <div class="invalid-feedback">
+                    Enter a Loaction
+                </div>
         </div>
         <div class="mb-3">
             <label for="country" lass="form-label">Country:</label>
             <input type="text" class="form-control" id="country" name="listing[country]" value="<%= listing.country %>"
                 required><br><br>
+                <div class="invalid-feedback">
+                    Enter a country
+                </div>
         </div>
          <button class="btn btn-danger">Update</button>
     </form>

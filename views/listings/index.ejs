@@ -13,7 +13,10 @@
                     <div class="card-body">
                         <p class="card-text">
                             <%=listing.title %> </br>
-                                &#8377 <%= listing.price.toLocaleString("en-IN") %> / night
+                                <% if (listing.price) { %>
+                                    &#8377 <%= listing.price.toLocaleString("en-IN") %> / night
+                                <% } %>
+                                
                         </p>
 
                     </div>
@@ -21,6 +24,7 @@
             </a>
             <% } %>
     </div>
+
 
 
     <!-- <li><a href="/listings/<%= listing._id %>"><%= listing.title %></a></li> -->

@@ -6,7 +6,12 @@ const listing = require('./models/listing.js');
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
+const wrapAsync = require('./utils/wrapAsycn.js');
+const ExpressError = require('./utils/ExpressError.js');
+const { listingSchema } = require('./schema.js');
 app.use(methodOverride('_method'));
+
+
 
 
 
@@ -29,6 +34,16 @@ app.get('/', (req, res) => {
     res.send('hello world');
 });
 
+const validateListing = (req, res, next) => {
+     let { error } = listingSchema.validate(req.body);
+     if(error){
+        const msg = error.details.map(el => el.message).join(',');
+        return next(new ExpressError(400, msg));
+     }
+     next();
+}
+
+
 app.get('/listings', async (req, res) => {
     let alllistings = await listing.find({});
     res.render('listings/index.ejs',{alllistings});
@@ -36,6 +51,7 @@ app.get('/listings', async (req, res) => {
 });
 
 app.get('/listings/new', (req, res) => {
+
     res.render('listings/new.ejs');
 });
 
@@ -51,11 +67,14 @@ app.get('/listings/:id', async (req, res) => {
 });
 
 
-app.post('/listings', async (req, res) => {
+app.post('/listings',validateListing, wrapAsync(async (req, res,next) => {
     const newlisting = new listing(req.body.listing);
+   
     await newlisting.save();
     res.redirect('/listings');
-});
+
+    
+}));
 
 app.get('/listings/:id/edit', async (req, res) => {
     let {id} = req.params;
@@ -63,11 +82,12 @@ app.get('/listings/:id/edit', async (req, res) => {
     res.render('listings/edit.ejs',{listing: listing1});
 });
 
-app.put('/listings/:id',async(req,res)=>{
+app.put('/listings/:id',validateListing,wrapAsync(async(req,res)=>{
      let {id} = req.params;
+    
     await listing.findByIdAndUpdate( id,{ ...req.body.listing }, { new: true });
     res.redirect('/listings');
-})
+}))
  
 
 app.delete('/listings/:id',async(req,res)=>{
@@ -91,6 +111,14 @@ res.redirect('/listings');
 // });
 
 
+app.all("/{*splat}",(req, res, next) => {
+    next(new ExpressError(404, 'Page Not Found'));
+});
+
+app.use((err, req, res, next) => {
+    let { statusCode = 500, message = 'Something went wrong' } = err;
+   res.status(statusCode).render('listings/Error', { err });
+});
 
 
 main().then(() => {
