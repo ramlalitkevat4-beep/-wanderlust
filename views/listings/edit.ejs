@@ -1,6 +1,6 @@
 <% layout('layout/boilerplate') %>
     <h1>Edit Listing</h1>
-    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" novalidate class="needs-validation">
+    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" class="needs-validation">
        <div class="mb-3">
             <label for="title" class="form-label">Title:</label>
             <input type="text" id="title" class="form-control" name="listing[title]" value="<%= listing.title %>"
@@ -29,11 +29,11 @@
                 </div>
         </div>
         <div class="mb-3">
-            <label for="locations" class="form-label">Locations:</label>
-            <input type="text" class="form-control" id="locations" name="listing[locations]"
-                value="<%= listing.locations %>" required><br><br> >
+            <label for="location" class="form-label">Location:</label>
+            <input type="text" class="form-control" id="location" name="listing[location]"
+                value="<%= listing.location %>" required><br><br>
                 <div class="invalid-feedback">
-                    Enter a Loaction
+                    Enter a Location
                 </div>
         </div>
         <div class="mb-3">

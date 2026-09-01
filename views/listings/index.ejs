@@ -7,16 +7,19 @@
     <div class="row row-cols-lg-3 row-cols-md-3">
         <% for (listing of alllistings) { %>
             <a href="/listings/<%=listing._id %>" class="listing-link">
-                <div class="card row" style="width: 20rem;">
-                    <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height:20rem">
+                <div class="card col listing-card row" style="width: 20rem;">
+                    <img src="<%= typeof listing.image === 'string' ? listing.image : (listing.image && listing.image.url) %>"
+                        class="card-img-top" 
+                        alt="listing_image" 
+                        style="height:20rem">
                     <div class="card-img-overlay">abcs</div>
                     <div class="card-body">
                         <p class="card-text">
                             <%=listing.title %> </br>
                                 <% if (listing.price) { %>
                                     &#8377 <%= listing.price.toLocaleString("en-IN") %> / night
-                                <% } %>
-                                
+                                        <% } %>
+
                         </p>
 
                     </div>

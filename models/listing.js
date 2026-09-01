@@ -33,7 +33,17 @@ const listingSchema = new schema({
     }, country: {
         type: String,
      
-    }
+    },
+
+    price:Number,
+    location: String,
+    country: String,
+    reviews:[
+        {
+            type: schema.Types.ObjectId,
+            ref: "Review",
+        }
+    ]
 }
 );
 
