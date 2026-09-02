@@ -101,11 +101,11 @@ app.put('/listings/:id',validateListing,wrapAsync(async(req,res)=>{
 // Delete Route 
 app.delete('/listings/:id',async(req,res)=>{
 let {id}=req.params;
-
 let deletedlisting =await listing.findByIdAndDelete(id);
 console.log(deletedlisting);
 res.redirect('/listings');
 });
+
 
 // Reviews  Post route
 app.post('/listings/:id/reviews',validateReview,wrapAsync(async(req,res)=>{
