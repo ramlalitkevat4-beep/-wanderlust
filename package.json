@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "accepts": "^2.0.0",
+    "cookie-parser": "^1.4.7",
     "ejs": "^6.0.1",
     "ejs-mate": "^4.0.0",
     "express": "^5.2.1",

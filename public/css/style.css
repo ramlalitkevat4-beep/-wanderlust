@@ -18,10 +18,13 @@ h1 {
 
 .navbar{
     height:5rem;
+
+    
 }
 .fa-regular{
     font-size: 2rem;
     color: #fe424d;
+
 }
 .nav-link{
     color:#222222 !important;
