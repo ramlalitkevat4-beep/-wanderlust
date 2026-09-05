@@ -35,9 +35,7 @@ const listingSchema = new schema({
      
     },
 
-    price:Number,
-    location: String,
-    country: String,
+   
     reviews:[
         {
             type: schema.Types.ObjectId,

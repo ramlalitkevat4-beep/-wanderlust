@@ -1,4 +1,5 @@
 <% layout('layout/boilerplate') %>
+<%=success %>
     <h1>Edit Listing</h1>
     <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" class="needs-validation">
        <div class="mb-3">
@@ -37,13 +38,18 @@
                 </div>
         </div>
         <div class="mb-3">
-            <label for="country" lass="form-label">Country:</label>
+            <label for="country" class="form-label">Country:</label>
             <input type="text" class="form-control" id="country" name="listing[country]" value="<%= listing.country %>"
                 required><br><br>
                 <div class="invalid-feedback">
                     Enter a country
                 </div>
         </div>
+        <input
+    type="hidden"
+    name="listing[image][url]"
+    value="<%= listing.image.url %>"
+        >
          <button class="btn btn-danger">Update</button>
     </form>
 

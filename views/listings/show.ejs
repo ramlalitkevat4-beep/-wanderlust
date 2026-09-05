@@ -5,7 +5,7 @@
       <h3> Listing details</h3>
     </div>
     <div class="card col-6 offset-2 listing-card">
-      <img src="<%= typeof listing.image === 'string' ? listing.image : (listing.image && listing.image.url) %>" class="card-img-top show-img" alt="listing_img" />
+      <img src="<%= listing.image && (listing.image.url || listing.image) %>" class="card-img-top show-img" alt="listing_img" />
 
       <div class="card-body">
         <p class="card-text">
