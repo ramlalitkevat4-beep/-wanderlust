@@ -52,7 +52,7 @@ router.get('/:id',wrapAsync( async (req, res) => {
     }
       res.render('listings/show.ejs',{listing: listing1});
 }));
-
+ 
 // Create new listing
 router.post('/',validateListing, wrapAsync(async (req, res,next) => {
     const newlisting = new listing(req.body.listing);

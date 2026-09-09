@@ -6,10 +6,14 @@ const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError.js');
-const listings=require('./routes/listings.js')
-const reviews=require('./routes/review.js')
+const listingRouter=require('./routes/listings.js')
+const reviewRouter=require('./routes/review.js')
+const userRouter=require('./routes/user.js')
 const session = require('express-session');
 const flash=require('connect-flash');
+const passport=require('passport');
+const LocalStrategy=require('passport-local');
+const User=require('./models/user.js');
 
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -44,6 +48,14 @@ app.get('/', (req, res) => {
 app.use(session(sessionOptions)); // to use session as middleware
 app.use(flash()); // to use flash as middleware
 
+app.use(passport.initialize()); // assport ko Express application me initialize karta hai.
+app.use(passport.session()); //ne logged-in user ko session ke through remember karne ke liye
+passport.use(new LocalStrategy(User.authenticate())); // to use local strategy for authentication
+passport.serializeUser(User.serializeUser()); // to serialize user for session
+passport.deserializeUser(User.deserializeUser()); // to deserialize user for session
+
+
+
 // middleware to set flash messages in response locals
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
@@ -52,9 +64,13 @@ app.use((req, res, next) => {
     next();
 });
 
+
+
+
 // routes
-app.use('/listings', listings);
-app.use('/listings/:id/reviews', reviews)
+app.use('/listings', listingRouter);
+app.use('/listings/:id/reviews', reviewRouter);
+app.use('/', userRouter);
 
 // middleware to handle 404 errors
 app.all("/{*splat}",(req, res, next) => {
