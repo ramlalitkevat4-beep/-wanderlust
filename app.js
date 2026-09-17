@@ -10,10 +10,11 @@ const listingRouter=require('./routes/listings.js')
 const reviewRouter=require('./routes/review.js')
 const userRouter=require('./routes/user.js')
 const session = require('express-session');
-const flash=require('connect-flash');
+const flash=require('./utils/flash.js');
 const passport=require('passport');
 const LocalStrategy=require('passport-local');
 const User=require('./models/user.js');
+const { resolveSoa } = require('dns');
 
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -60,7 +61,7 @@ passport.deserializeUser(User.deserializeUser()); // to deserialize user for ses
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
-    console.log('Flash messages:', res.locals.success, res.locals.error); // Log flash messages
+    res.locals.currUser=req.user;
     next();
 });
 
