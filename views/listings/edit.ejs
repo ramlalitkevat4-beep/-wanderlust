@@ -1,7 +1,7 @@
 <% layout('layout/boilerplate') %>
 <%=success %>
     <h1>Edit Listing</h1>
-    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" class="needs-validation">
+    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" class="needs-validation" enctype="multipart/form-data">
        <div class="mb-3">
             <label for="title" class="form-label">Title:</label>
             <input type="text" id="title" class="form-control" name="listing[title]" value="<%= listing.title %>"
@@ -19,6 +19,19 @@
                     Enter a Description
                 </div>
 
+        </div>
+        
+         <div class="mb-3">
+            <% if (originalImage) { %>
+                <p> Preview: </p>
+                <img class="edit-image-preview" src="<%=originalImage  %>" alt="Current listing image">
+            <% } %>
+        </div>
+
+         <div class="mb-3">
+            <label for="image" class="form-label">upload Listing image</label>
+            <input type="file" class="form-control" name="listing[image]" >
+        
         </div>
 
         <div class="mb-3">
@@ -45,11 +58,9 @@
                     Enter a country
                 </div>
         </div>
-        <input
-    type="hidden"
-    name="listing[image][url]"
-    value="<%= listing.image.url %>"
-        >
+        <% if (listing.image && listing.image.url) { %>
+            <input type="hidden" name="listing[image][url]" value="<%= listing.image.url %>">
+        <% } %>
          <button class="btn btn-danger">Update</button>
     </form>
 

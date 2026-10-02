@@ -4,7 +4,7 @@ const initdata = require('./data.js');
 
 
 const url = "mongodb://127.0.0.1:27017/wanderlust";
-const OWNER_ID = "6aa0247a668101f3d3500b8d";
+const OWNER_ID = "6aa172a17884ade82c3c1759";
 
 main().then(() => {
     console.log('connected to database');

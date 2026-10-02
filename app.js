@@ -1,5 +1,8 @@
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
+app.locals.mapToken = process.env.MAP_TOKEN || 'REPLACE_WITH_MAPBOX_TOKEN';
 const mongoose = require('mongoose');
 const port = 8080;
 const path = require('path');
@@ -10,11 +13,20 @@ const listingRouter=require('./routes/listings.js')
 const reviewRouter=require('./routes/review.js')
 const userRouter=require('./routes/user.js')
 const session = require('express-session');
+const { MongoStore } = require('connect-mongo');
 const flash=require('./utils/flash.js');
 const passport=require('passport');
 const LocalStrategy=require('passport-local');
 const User=require('./models/user.js');
-const { resolveSoa } = require('dns');
+
+const dns = require("dns");
+
+dns.setServers([
+    "8.8.8.8",
+    "1.1.1.1"
+]);
+
+const dbUrl = process.env.ATLASDB_URL;
 
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -24,14 +36,33 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, 'public')));
-const url = "mongodb://127.0.0.1:27017/wanderlust";
 
 async function main() {
-    await mongoose.connect(url);
+    try {
+        await mongoose.connect(process.env.ATLASDB_URL);
+        console.log("Connected to Atlas MongoDB");
+    } catch (err) {
+        console.error("Atlas MongoDB connection failed:", err);
+        process.exit(1);
+    }
 }
 
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET,
+    },
+    touchAfter: 24 * 3600 // time period in seconds
+});
+
+store.on("error", (e) => {
+    console.log("Mongo Session store error", e);
+});
+
 const sessionOptions={
-    secret:'mysecretcode',
+    store:store,
+    secret: process.env.SECRET,
     resave:false,
     saveUninitialized:true,
     cookie:{
@@ -41,9 +72,6 @@ const sessionOptions={
     }
 };
 
-app.get('/', (req, res) => {
-    res.send('hello world');
-});
 
 
 app.use(session(sessionOptions)); // to use session as middleware
@@ -68,13 +96,18 @@ app.use((req, res, next) => {
 
 
 
+
 // routes
 app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewRouter);
 app.use('/', userRouter);
 
+app.get('/', (req, res) => {
+    res.redirect('/listings');
+});
+
 // middleware to handle 404 errors
-app.all("/{*splat}",(req, res, next) => {
+app.all("/*splat",(req, res, next) => {
     next(new ExpressError(404, 'Page Not Found'));
 });
 
@@ -85,12 +118,13 @@ app.use((err, req, res, next) => {
    res.status(statusCode).render('listings/Error', { err });
 });
 
-// start the server and connect to the database
-main().then(() => {
-    console.log('connected to database');
-    app.listen(port, () => {
-        console.log(`server is running on port ${port}`);
+main()
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    })
+    .catch((err) => {
+        console.error(err.message);
+        process.exit(1);
     });
-}).catch((err) => {
-    console.log('error connecting to database', err);
-});

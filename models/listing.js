@@ -12,14 +12,8 @@ const listingSchema = new schema({
       
     },
   image: {
-    filename: {
-        type: String,
-        default: "listingimage"
-    },
-    url: {
-        type: String,
-        default: "https://images.unsplash.com/photo-1644333192141-1135d690734f?..."
-    }
+    url:String,
+    filename:String,
 }
     ,
     price: {
@@ -46,6 +40,18 @@ const listingSchema = new schema({
         type: schema.Types.ObjectId,
         ref: "User",
     },
+    geometry:{
+        type:{
+            type:String,
+            enum:['Point'],
+            required:true,
+        },
+        coordinates:{
+            type:[Number],
+            required:true,
+        }
+    }
+
 }
 );
 
